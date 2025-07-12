@@ -9,6 +9,10 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import { createTheme, ThemeProvider } from "@mui/material";
+import { green } from "@mui/material/colors";
+
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -42,7 +46,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#05df72',
+        contrastText: '#ffff'
+      },
+      secondary: {
+        main: '#347cdb',
+      }
+    }
+  })
+  return (
+    <ThemeProvider theme={theme}>
+      <Outlet />
+    </ThemeProvider>
+  )
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
