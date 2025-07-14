@@ -7,11 +7,11 @@ import {
   ScrollRestoration,
 } from "react-router";
 
+
 import type { Route } from "./+types/root";
 import "./app.css";
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { createTheme, ThemeProvider } from "@mui/material";
-import { green } from "@mui/material/colors";
 
 
 export const links: Route.LinksFunction = () => [

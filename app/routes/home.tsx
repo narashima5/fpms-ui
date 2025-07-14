@@ -1,13 +1,15 @@
+import { redirect } from "react-router";
 import type { Route } from "./+types/home";
-import LoginPage from "~/routes/LoginPage/LoginPage";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Home - FPMS" },
+    { name: "description", content: "Welcome to Fertilizer Product Management System!" },
   ];
 }
 
+
 export default function Home() {
-  return <LoginPage />;
+  
+  return <div>Home</div>
 }
