@@ -55,6 +55,9 @@ export default function App() {
       },
       secondary: {
         main: '#347cdb',
+      },
+      info: {
+        main: '#717479ff'
       }
     }
   })

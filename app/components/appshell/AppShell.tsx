@@ -1,5 +1,6 @@
-import { AppBar, Box, CssBaseline, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemText, Toolbar, Typography } from "@mui/material";
+import { AppBar, Box, Divider, Drawer, IconButton, List, Toolbar, Typography, useMediaQuery } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu"
+import LeftArrow from "@mui/icons-material/ArrowBack"
 import LogOut from "@mui/icons-material/Logout"
 import { NavLink, Outlet, useNavigate } from "react-router";
 import { useState } from "react";
@@ -8,7 +9,23 @@ export default function AppShell() {
 
     const drawerWidth = 240;
 
-    const [open, setOpen] = useState(false)
+    const [desktopOpen, setDesktopOpen] = useState(false)
+
+    const isSmallScreen = useMediaQuery('(max-width:600px)')
+
+    const navigate = useNavigate();
+
+    const handleLogOut = () => {
+        navigate('/login')
+    }
+
+    const handleToggle = () => {
+        setDesktopOpen(!desktopOpen)
+    }
+
+    const handleClose = () => {
+        setDesktopOpen(false)
+    }
 
     const navMenus = [
         {
@@ -33,18 +50,23 @@ export default function AppShell() {
         <div className={`w-[${drawerWidth}px]`}>
 
             <Divider />
+            <div>
+                <IconButton onClick={handleToggle} hidden={!isSmallScreen}>
+                    <LeftArrow />
+                </IconButton>
+            </div>
             <List>
                 {
                     navMenus.map(({ path, text }) => {
                         return (
                             <NavLink to={path} key={`${text}-${path}`} className={({ isActive }) =>
-                                `flex items-center px-3 py-2 rounded hover:bg-gray-200 ${isActive ? 'active-drawer-item bg-gray-300 text-green-700 font-medium' : ''
+                                `flex items-center px-3 py-2 rounded hover:bg-gray-200 ${isActive ? 'bg-gray-300 text-green-700' : ''
                                 }`
                             }>
                                 <div
                                     className="flex"
                                 >
-                                    <span className="ml-3">{text}</span>
+                                   <p className="ml-3">{text}</p> 
                                 </div>
                             </NavLink>
 
@@ -56,19 +78,7 @@ export default function AppShell() {
         </div>
     )
 
-    const navigate = useNavigate();
-
-    const handleLogOut = () => {
-        navigate('/login')
-    }
-
-    const handleToggle = () => {
-        setOpen(!open)
-    }
-
-    const handleClose = () => {
-        setOpen(false)
-    }
+    
 
     return (
         <div>
@@ -102,15 +112,15 @@ export default function AppShell() {
                 </AppBar>
 
                 <Drawer
-                    variant="persistent"
-                    open={open}
+                    variant={isSmallScreen ? 'temporary' : 'persistent'}
+                    open={desktopOpen}
                     onClose={handleClose}
                     sx={{
                         width: drawerWidth,
                         '& .MuiDrawer-paper': {
                             width: drawerWidth,
-                            boxSizing: 'border-box',
-                            top: '100px', // height of AppBar
+                            boxSizing: !isSmallScreen ? 'border-box':'unset',
+                            top: isSmallScreen ? 0 : '100px', // height of AppBar
                         },
                     }}
                 >
@@ -122,14 +132,12 @@ export default function AppShell() {
                 component="main"
                 sx={{
                     flexGrow: 1,
-                    p: 3,
-                    marginLeft: open ? `${drawerWidth}px` : 0,
+                    px: 3,
+                    pt: 3,
+                    marginLeft: !isSmallScreen ? (desktopOpen ? `${drawerWidth}px` : 0) : 0,
                     transition: 'margin 0.3s'
                 }}
             >
-                {/* <Typography>
-                    This is your main content area. The drawer will not overlap the header.
-                </Typography> */}
                 <Outlet />
             </Box>
         </div>
