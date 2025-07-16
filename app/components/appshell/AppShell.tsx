@@ -83,7 +83,7 @@ export default function AppShell() {
     return (
         <div>
             <Box sx={{ flexGrow: 1 }}>
-                <AppBar className="flex flex-col justify-center" position="static" sx={{ backgroundColor: 'white', color: 'black', height: '100px' }}>
+                <AppBar className="flex flex-col justify-center"  position="static" sx={{ backgroundColor: 'white', color: 'black', height: '100px' }}>
                     <Toolbar>
                         <IconButton
                             onClick={handleToggle}

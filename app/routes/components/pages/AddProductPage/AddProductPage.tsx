@@ -1,4 +1,4 @@
-import { Button, TextField } from "@mui/material"
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material"
 import { useFormik } from "formik"
 import { useNavigate } from "react-router";
 import * as Yup from 'yup'
@@ -6,25 +6,31 @@ import * as Yup from 'yup'
 interface InitialValuesProps {
     productName: string;
     brandName: string;
-    sellingPrice: number;
-    mrp: number;
+    sellingPrice: number | null;
+    mrp: number | null;
     hsn: string;
     category: string;
-    tax: number;
+    tax: number | null;
 }
 
 export default function AddProductPage() {
+
+    const CategoryMenu = [
+        'Fertilizers',
+        'Pesticides',
+        'Seeds'
+    ]
 
     const navigate = useNavigate()
 
     const initialValues: InitialValuesProps = {
         productName: '',
         brandName: '',
-        sellingPrice: 0,
-        mrp: 0,
+        sellingPrice: null,
+        mrp: null,
         hsn: '',
         category: '',
-        tax: 0
+        tax: null
     }
 
     const validationSchema = Yup.object({
@@ -67,7 +73,7 @@ export default function AddProductPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 justify-center items-center w-3/4 lg:w-1/2 gap-6">
                     <TextField
                         label='Product Name'
-                        id="productName"
+                        required
                         name="productName"
                         error={!!(errors.productName && touched.productName)}
                         helperText={(errors.productName && touched.productName) && errors.productName}
@@ -77,7 +83,7 @@ export default function AddProductPage() {
                     />
                     <TextField
                         label='Brand Name'
-                        id="brandName"
+                        required
                         name="brandName"
                         error={!!(errors.brandName && touched.brandName)}
                         helperText={(errors.brandName && touched.brandName) && errors.brandName}
@@ -85,19 +91,30 @@ export default function AddProductPage() {
                         onChange={handleChange}
                         onBlur={handleBlur}
                     />
-                    <TextField
-                        label='Category'
-                        id="category"
-                        name="category"
-                        error={!!(errors.category && touched.category)}
-                        helperText={(errors.category && touched.category) && errors.category}
-                        value={values.category}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                    />
+                    <FormControl fullWidth>
+                        <InputLabel id="menu1">Category*</InputLabel>
+                        <Select
+                            labelId="menu1"
+                            required
+                            onChange={handleChange}
+                            value={values.category}
+                            label="Category"
+                            name="category"
+                            onBlur={handleBlur}
+                            error={!!(errors.category && touched.category)}
+                        >
+                            {
+                                CategoryMenu.map((value) => {
+                                    return (
+                                        <MenuItem value={value} key={value}>{value}</MenuItem>
+                                    )
+                                })
+                            }
+                        </Select>
+                    </FormControl>
                     <TextField
                         label='HSN'
-                        id="hsn"
+                        required
                         name="hsn"
                         error={!!(errors.hsn && touched.hsn)}
                         helperText={(errors.hsn && touched.hsn) && errors.hsn}
@@ -107,7 +124,7 @@ export default function AddProductPage() {
                     />
                     <TextField
                         label='Selling Price'
-                        id="sellingPrice"
+                        required
                         name="sellingPrice"
                         type="number"
                         error={!!(errors.sellingPrice && touched.sellingPrice)}
@@ -118,7 +135,7 @@ export default function AddProductPage() {
                     />
                     <TextField
                         label='MRP'
-                        id="mrp"
+                        required
                         name="mrp"
                         type="number"
                         error={!!(errors.mrp && touched.mrp)}
@@ -129,7 +146,7 @@ export default function AddProductPage() {
                     />
                     <TextField
                         label='Tax (in %)'
-                        id="tax"
+                        required
                         name="tax"
                         type="number"
                         error={!!(errors.tax && touched.tax)}

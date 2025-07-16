@@ -18,6 +18,7 @@ export default function LoginPage() {
     const { values,
         touched,
         errors,
+        isValid,
         handleBlur,
         handleChange,
         handleSubmit
@@ -80,7 +81,7 @@ export default function LoginPage() {
                         </div>
 
                         <div className="flex justify-center lg:justify-end items-end w-full mt-1 lg:mt-3">
-                            <Button type="submit" variant="contained" sx={{ fontSize: '22px' }} className="rounded-lg text-white w-full lg:w-1/2">Login <ArrowRight /></Button>
+                            <Button disabled={!isValid || !values.username || !values.password} type="submit" variant="contained" sx={{ fontSize: '22px' }} className="rounded-lg text-white w-full lg:w-1/2">Login <ArrowRight /></Button>
                         </div>
                     </form>
                 </div>
