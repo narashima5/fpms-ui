@@ -2,15 +2,16 @@ import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from "@m
 import { useFormik } from "formik"
 import { useNavigate } from "react-router";
 import * as Yup from 'yup'
+import { addProduct } from "~/Services/storage/Product";
 
-interface InitialValuesProps {
+interface ProductDetailsProps {
     productName: string;
     brandName: string;
-    sellingPrice: number | null;
-    mrp: number | null;
+    sellingPrice: string;
+    mrp: string;
     hsn: string;
     category: string;
-    tax: number | null;
+    tax: string;
 }
 
 export default function AddProductPage() {
@@ -23,14 +24,14 @@ export default function AddProductPage() {
 
     const navigate = useNavigate()
 
-    const initialValues: InitialValuesProps = {
+    const initialValues = {
         productName: '',
         brandName: '',
-        sellingPrice: null,
-        mrp: null,
+        sellingPrice: '',
+        mrp: '',
         hsn: '',
         category: '',
-        tax: null
+        tax: ''
     }
 
     const validationSchema = Yup.object({
@@ -40,7 +41,7 @@ export default function AddProductPage() {
         mrp: Yup.number().required("Required Field"),
         hsn: Yup.string().required("Required Field"),
         category: Yup.string().required("Required Field"),
-        tax: Yup.number().required("Required Field"),
+        tax: Yup.number().required("Required Field").min(0).max(100),
     })
 
     const {
@@ -50,18 +51,32 @@ export default function AddProductPage() {
         handleSubmit,
         handleChange,
         handleBlur
-    } = useFormik({
+    } = useFormik<ProductDetailsProps>({
         initialValues,
         validationSchema,
-        onSubmit: (values) => {
-            console.log(values);
-            alert("Product Added");
-            navigate('/products');
+        onSubmit: async (values) => {
+            const formattedValue = {
+                ...values,
+                sellingPrice : Number(values.sellingPrice),
+                mrp : Number(values.mrp),
+                tax : Number(values.tax)
+            }
+            await addProduct(formattedValue).then(
+                () => {
+                    alert("Product Added");
+                    navigate('/products');
+                },
+            )
+            .catch((err) => console.log(err)
+            )
+
         }
     })
 
+
     const handleCancel = () => {
         navigate('/products');
+
     }
 
     return (
@@ -149,6 +164,12 @@ export default function AddProductPage() {
                         required
                         name="tax"
                         type="number"
+                        slotProps={{
+                            htmlInput: {
+                                min: 0,
+                                max: 100
+                            }
+                        }}
                         error={!!(errors.tax && touched.tax)}
                         helperText={(errors.tax && touched.tax) && errors.tax}
                         value={values.tax}
