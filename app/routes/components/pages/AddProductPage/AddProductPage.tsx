@@ -63,7 +63,6 @@ export default function AddProductPage() {
             }
             await addProduct(formattedValue).then(
                 () => {
-                    alert("Product Added");
                     navigate('/products');
                 },
             )
